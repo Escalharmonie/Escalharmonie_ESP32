@@ -1,16 +1,19 @@
 #pragma once
 
 
+#include <MessageManager.h>
 #include <vl53l4cx_class.h>
 #include <Wire.h>
 
 
-class Sensor {
+class Sensor
+{
     private:
         VL53L4CX_Error _status;
         uint8_t _multiplexerAddress;
         uint8_t _multiplexerChannel;
-        TwoWire* _i2cBus;
+        TwoWire* _i2cBus_ptr;
+        MessageManager* _msg_ptr;
 
         uint8_t _setMultiplexerChannel(uint8_t channel);
 
@@ -19,11 +22,12 @@ class Sensor {
         int id;
         bool isHealthy = true;
 
-        Sensor(VL53L4CX *sensor_ptr, int id, uint8_t multiplexerAddress, uint8_t multiplexerChannel, TwoWire *i2cBus);
+        Sensor(VL53L4CX *sensor_ptr, int id, uint8_t multiplexerAddress, uint8_t multiplexerChannel, TwoWire *i2cBus_ptr, MessageManager *msg_ptr);
         void switchMultiplexerChannel();
         void init();
         int setAddress();
         int start();
         void printMeasure();
+        void getMeasure();
 };
 

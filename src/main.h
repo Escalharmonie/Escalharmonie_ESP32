@@ -2,6 +2,7 @@
 
 
 #include <Arduino.h>
+#include <MessageManager.h>
 #include <Sensor.h>
 
 
@@ -10,10 +11,13 @@
 #define NB_SENSORS 2
 
 
+MessageManager msg = MessageManager();
+
+
 VL53L4CX sensor_VL53L4CX_1(&DEV_I2C, 4);
 VL53L4CX sensor_VL53L4CX_2(&DEV_I2C, 5);
-Sensor sensor1 = Sensor(&sensor_VL53L4CX_1, 1, MULTIPLEXER_1_ADDRESS, 0, &DEV_I2C);
-Sensor sensor2 = Sensor(&sensor_VL53L4CX_2, 2, MULTIPLEXER_1_ADDRESS, 1, &DEV_I2C);
+Sensor sensor1 = Sensor(&sensor_VL53L4CX_1, 1, MULTIPLEXER_1_ADDRESS, 0, &DEV_I2C, &msg);
+Sensor sensor2 = Sensor(&sensor_VL53L4CX_2, 2, MULTIPLEXER_1_ADDRESS, 1, &DEV_I2C, &msg);
 Sensor* sensors[] = {
     &sensor1,
     &sensor2

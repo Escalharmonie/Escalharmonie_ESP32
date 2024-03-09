@@ -1,11 +1,12 @@
 #include <Sensor.h>
 
-Sensor::Sensor(VL53L4CX *sensor_ptr, int id, uint8_t multiplexerAddress, uint8_t multiplexerChannel, TwoWire *i2cBus) {
+Sensor::Sensor(VL53L4CX *sensor_ptr, int id, uint8_t multiplexerAddress, uint8_t multiplexerChannel, TwoWire *i2cBus_ptr, MessageManager *msg_ptr) {
     this->VL53L4CX_sensor_ptr = sensor_ptr;
     this->id = id;
     this->_multiplexerAddress = multiplexerAddress;
     this->_multiplexerChannel = this->_setMultiplexerChannel(multiplexerChannel);
-    this->_i2cBus = i2cBus;
+    this->_i2cBus_ptr = i2cBus_ptr;
+    this->_msg_ptr = msg_ptr;
 }
 
 uint8_t Sensor::_setMultiplexerChannel(uint8_t channel){
@@ -25,9 +26,9 @@ void Sensor::switchMultiplexerChannel(){
     Serial.print(" of multiplexer at address 0x");
     Serial.println(this->_multiplexerAddress, HEX);
 
-    this->_i2cBus->beginTransmission(this->_multiplexerAddress);
-    this->_i2cBus->write(1 << this->_multiplexerChannel);
-    this->_i2cBus->endTransmission();
+    this->_i2cBus_ptr->beginTransmission(this->_multiplexerAddress);
+    this->_i2cBus_ptr->write(1 << this->_multiplexerChannel);
+    this->_i2cBus_ptr->endTransmission();
 }
 
 void Sensor::init(){
@@ -119,6 +120,32 @@ void Sensor::printMeasure()
 
         if (status == 0)
         {
+            status = this->VL53L4CX_sensor_ptr->VL53L4CX_ClearInterruptAndStartMeasurement();
+        }
+    }
+}
+
+void Sensor::getMeasure()
+{
+    if(!this->isHealthy){
+        return;
+    }
+
+    VL53L4CX_MultiRangingData_t MultiRangingData;
+    VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
+    uint8_t NewDataReady = 0;
+    int status;
+
+    do {
+        status = this->VL53L4CX_sensor_ptr->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+    } while (!NewDataReady);
+
+    if ((!status) && (NewDataReady != 0))
+    {
+        status = this->VL53L4CX_sensor_ptr->VL53L4CX_GetMultiRangingData(pMultiRangingData);
+        if (status == 0)
+        {
+            this->_msg_ptr->parse(pMultiRangingData, this->id);
             status = this->VL53L4CX_sensor_ptr->VL53L4CX_ClearInterruptAndStartMeasurement();
         }
     }

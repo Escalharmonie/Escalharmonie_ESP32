@@ -15,11 +15,16 @@ void setup()
 
 void loop()
 {
+    msg.init();
+
     for (int i = 0; i < NB_SENSORS; i++)
     {        
+        VL53L4CX_MultiRangingData_t* sensorData_ptr;
         sensors[i]->switchMultiplexerChannel();
-        sensors[i]->printMeasure();
+        sensors[i]->getMeasure();
     }
+
+    msg.sendMsg();
 }
 
 void i2cScanner()
