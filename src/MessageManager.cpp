@@ -5,6 +5,15 @@ MessageManager::MessageManager()
 {
 }
 
+/**
+ * @brief Parses the sensor data and adds it to the message.
+ * 
+ * This function takes a pointer to the `VL53L4CX_MultiRangingData_t` structure containing the sensor data
+ * and the sensor ID as parameters. It parses the sensor data and adds it to the message in JSON format.
+ * 
+ * @param sensorData_ptr A pointer to the `VL53L4CX_MultiRangingData_t` structure containing the sensor data.
+ * @param sensorId The ID of the sensor.
+ */
 void MessageManager::parse(VL53L4CX_MultiRangingData_t* sensorData_ptr, int sensorId)
 {
     JsonDocument sensor;
@@ -18,12 +27,18 @@ void MessageManager::parse(VL53L4CX_MultiRangingData_t* sensorData_ptr, int sens
     msg["params"]["sensors"].add(sensor);
 }
 
+/**
+ * @brief Sends the message by serializing it to JSON and printing it to the Serial port.
+ */
 void MessageManager::sendMsg()
 {
     serializeJson(msg, Serial);
     Serial.println("");
 }
 
+/**
+ * @brief Clears the message and sets the JSON-RPC version and method.
+ */
 void MessageManager::init()
 {
     msg.clear();

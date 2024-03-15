@@ -5,6 +5,9 @@
 #include <vl53l4cx_class.h>
 
 
+/**
+ * @brief Class for managing Serial messages (formatting and sending).
+ */
 class MessageManager
 {
     private:
@@ -12,7 +15,7 @@ class MessageManager
 
     public:
         MessageManager();
+
         void parse(VL53L4CX_MultiRangingData_t* sensorData_ptr, int sensorId);
-        void sendMsg();
-        void init();
+        void sendMsg();        void init();
 };
