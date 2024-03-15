@@ -3,7 +3,7 @@ local.parameters.protocol.set("Lines");
 local.parameters.autoAdd.set(false);
 
 // Set script params
-local.scripts.jSONparser.enableLog.set(true);
+script.enableLog.set(true);
 
 // Add a test trigger
 var testTrigger = local.values.addTrigger("Test Trigger", "Description of my trigger");
@@ -22,7 +22,7 @@ for(var i = 0; i < 8; i++) {
 
 	for(var j = 0; j < 4; j++) {
 		// Add parameters for each sensor inside this container
-		sensors[i].addFloatParameter("Distance" + (j+1) + "Value", "Distance" + (j+1) + "Value", 0);
+		sensors[i].addIntParameter("Distance" + (j+1) + "Value", "Distance" + (j+1) + "Value", 0);
 		sensors[i].addIntParameter("Distance" + (j+1) + "Status", "Distance" + (j+1) + "Status", 0);
 		sensors[i].addBoolParameter("Distance" + (j+1) + "IsPresent", "Distance" + (j+1) + "IsPresent", 0);
 	}
