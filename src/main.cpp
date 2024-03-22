@@ -54,8 +54,8 @@ void setup()
 
     // Optional: change I2C bus clock speed (in Hz) to increase FPS
     // Higher speed means higher FPS but also higher risk of errors
-    // Default speed is 400kHz
-    // DEV_I2C.setClock(700000);
+    // Default speed is 100kHz ?
+    DEV_I2C.setClock(400000);
 
     initSensors();
 }
